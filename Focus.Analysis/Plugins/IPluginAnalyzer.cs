@@ -1,7 +1,6 @@
-﻿namespace Focus.Analysis.Plugins
+﻿namespace Focus.Analysis.Plugins;
+
+public interface IPluginAnalyzer
 {
-    public interface IPluginAnalyzer
-    {
-        PluginAnalysis Analyze(string pluginName);
-    }
+    PluginAnalysis Analyze(string pluginName);
 }

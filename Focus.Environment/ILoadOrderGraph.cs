@@ -1,7 +1,6 @@
-﻿namespace Focus.Environment
+﻿namespace Focus.Environment;
+
+public interface ILoadOrderGraph : IReadOnlyLoadOrderGraph
 {
-    public interface ILoadOrderGraph : IReadOnlyLoadOrderGraph
-    {
-        void SetEnabled(string pluginName, bool enabled);
-    }
+    void SetEnabled(string pluginName, bool enabled);
 }

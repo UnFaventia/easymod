@@ -1,19 +1,16 @@
-﻿using System;
+﻿namespace Focus.Abstractions.Windows;
 
-namespace Focus.Abstractions.Windows
+public interface IEnvironmentStatics
 {
-    public interface IEnvironmentStatics
-    {
-        string GetFolderPath(Environment.SpecialFolder folder);
-    }
+    string GetFolderPath(Environment.SpecialFolder folder);
+}
 
-    public class EnvironmentStatics : IEnvironmentStatics
-    {
-        public static readonly EnvironmentStatics Default = new();
+public class EnvironmentStatics : IEnvironmentStatics
+{
+    public static readonly EnvironmentStatics Default = new();
 
-        public string GetFolderPath(Environment.SpecialFolder folder)
-        {
-            return Environment.GetFolderPath(folder);
-        }
+    public string GetFolderPath(Environment.SpecialFolder folder)
+    {
+        return Environment.GetFolderPath(folder);
     }
 }

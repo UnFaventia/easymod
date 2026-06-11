@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\EasyMod.props" />
+
+  <PropertyGroup>
+    <AssemblyTitle>UI-independent logic for EasyNPC such as app data and patch logic.</AssemblyTitle>
+    <RootNamespace>Focus.Apps.EasyNpc</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastEnum" />
+    <PackageReference Include="ini-parser">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
+    <PackageReference Include="Mutagen.Bethesda" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="System.Windows.Extensions" />
+    <PackageReference Include="VYaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Focus.Core\Focus.Core.csproj" />
+  </ItemGroup>
+
+</Project>

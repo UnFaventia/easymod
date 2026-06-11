@@ -1,25 +1,23 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 
-namespace Focus.Providers.Mutagen.Tests
+namespace Focus.Providers.Mutagen.Tests;
+
+public abstract class TheoryData : IEnumerable<object[]>
 {
-    public abstract class TheoryData : IEnumerable<object[]>
+    readonly List<object[]> data = new List<object[]>();
+
+    protected void Add(params object[] values)
     {
-        readonly List<object[]> data = new List<object[]>();
+        data.Add(values);
+    }
 
-        protected void Add(params object[] values)
-        {
-            data.Add(values);
-        }
+    public IEnumerator<object[]> GetEnumerator()
+    {
+        return data.GetEnumerator();
+    }
 
-        public IEnumerator<object[]> GetEnumerator()
-        {
-            return data.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

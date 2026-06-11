@@ -1,9 +1,8 @@
-﻿namespace Focus.Apps.EasyNpc.Build.Preview
+﻿namespace Focus.Apps.EasyNpc.Build.Preview;
+
+public enum ErrorLevel
 {
-    public enum ErrorLevel
-    {
-        None = 0,
-        Warning,
-        Fatal,
-    }
+    None = 0,
+    Warning,
+    Fatal,
 }

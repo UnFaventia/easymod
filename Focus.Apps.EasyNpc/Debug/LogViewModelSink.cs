@@ -1,46 +1,43 @@
 ﻿using Serilog.Core;
 using Serilog.Events;
-using System;
-using System.Collections.Generic;
 
-namespace Focus.Apps.EasyNpc.Debug
+namespace Focus.Apps.EasyNpc.Debug;
+
+public class LogViewModelSink : ILogEventSink
 {
-    public class LogViewModelSink : ILogEventSink
+    public LogViewModel? ViewModel
     {
-        public LogViewModel? ViewModel
+        get { return viewModel; }
+        set
         {
-            get { return viewModel; }
-            set
+            viewModel = value;
+            if (value is not null)
             {
-                viewModel = value;
-                if (value is not null)
-                {
-                    foreach (var logEvent in pendingEvents)
-                        Emit(logEvent);
-                    pendingEvents.Clear();
-                }
+                foreach (var logEvent in pendingEvents)
+                    Emit(logEvent);
+                pendingEvents.Clear();
             }
         }
+    }
 
-        private readonly IFormatProvider? formatProvider;
-        private readonly List<LogEvent> pendingEvents = new();
+    private readonly IFormatProvider? formatProvider;
+    private readonly List<LogEvent> pendingEvents = new();
 
-        private LogViewModel? viewModel;
+    private LogViewModel? viewModel;
 
-        public LogViewModelSink(IFormatProvider? formatProvider = null)
+    public LogViewModelSink(IFormatProvider? formatProvider = null)
+    {
+        this.formatProvider = formatProvider;
+    }
+
+    public void Emit(LogEvent logEvent)
+    {
+        if (ViewModel is null)
         {
-            this.formatProvider = formatProvider;
+            pendingEvents.Add(logEvent);
+            return;
         }
-
-        public void Emit(LogEvent logEvent)
-        {
-            if (ViewModel is null)
-            {
-                pendingEvents.Add(logEvent);
-                return;
-            }
-            var message = logEvent.RenderMessage(formatProvider);
-            ViewModel.Append(message);
-        }
+        var message = logEvent.RenderMessage(formatProvider);
+        ViewModel.Append(message);
     }
 }

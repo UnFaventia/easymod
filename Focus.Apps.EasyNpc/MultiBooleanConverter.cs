@@ -1,29 +1,37 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Windows.Data;
 
-namespace Focus.Apps.EasyNpc
+namespace Focus.Apps.EasyNpc;
+
+public class MultiBooleanConverter : IMultiValueConverter
 {
-    public class MultiBooleanConverter : IMultiValueConverter
+    public enum OperatorType
     {
-        public enum OperatorType { And, Or }
+        And,
+        Or,
+    }
 
-        public OperatorType Operator { get; set; } = OperatorType.And;
+    public OperatorType Operator { get; set; } = OperatorType.And;
 
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    {
+        return Operator switch
         {
-            return Operator switch
-            {
-                OperatorType.And => values.All(v => v is bool b && b),
-                OperatorType.Or => values.Any(v => v is bool b && b),
-                _ => throw new InvalidOperationException($"Unsupported boolean operator: ${Operator}")
-            };
-        }
+            OperatorType.And => values.All(v => v is bool b && b),
+            OperatorType.Or => values.Any(v => v is bool b && b),
+            _ => throw new InvalidOperationException($"Unsupported boolean operator: ${Operator}"),
+        };
+    }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException($"{nameof(MultiBooleanConverter)} requires a one-way binding.");
-        }
+    public object[] ConvertBack(
+        object value,
+        Type[] targetTypes,
+        object parameter,
+        CultureInfo culture
+    )
+    {
+        throw new NotSupportedException(
+            $"{nameof(MultiBooleanConverter)} requires a one-way binding."
+        );
     }
 }

@@ -1,87 +1,87 @@
-﻿using Mutagen.Bethesda.Plugins;
+﻿using System.Collections;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Focus.Providers.Mutagen.Tests.Analysis
+namespace Focus.Providers.Mutagen.Tests.Analysis;
+
+class FakeReadOnlyCache : IReadOnlyCache<ISkyrimMajorRecordGetter, FormKey>
 {
-    class FakeReadOnlyCache : IReadOnlyCache<ISkyrimMajorRecordGetter, FormKey>
+    private readonly Dictionary<FormKey, ISkyrimMajorRecordGetter> records = new();
+
+    public ISkyrimMajorRecordGetter this[FormKey key] => records[key];
+    public int Count => records.Count;
+    public IEnumerable<ISkyrimMajorRecordGetter> Items => records.Values;
+    public IEnumerable<FormKey> Keys => records.Keys;
+
+    public IReadOnlyCache<T, FormKey> Of<T>()
+        where T : class, ISkyrimMajorRecordGetter
     {
-        private readonly Dictionary<FormKey, ISkyrimMajorRecordGetter> records = new();
+        return new Wrapper<T>(this);
+    }
 
-        public ISkyrimMajorRecordGetter this[FormKey key] => records[key];
-        public int Count => records.Count;
-        public IEnumerable<ISkyrimMajorRecordGetter> Items => records.Values;
-        public IEnumerable<FormKey> Keys => records.Keys;
+    public void Put(ISkyrimMajorRecordGetter record)
+    {
+        records[record.FormKey] = record;
+    }
 
-        public IReadOnlyCache<T, FormKey> Of<T>()
-            where T : class, ISkyrimMajorRecordGetter
+    public bool ContainsKey(FormKey key)
+    {
+        return records.ContainsKey(key);
+    }
+
+    public IEnumerator<IKeyValue<FormKey, ISkyrimMajorRecordGetter>> GetEnumerator()
+    {
+        foreach (var kvp in records)
+            yield return new KeyValue<FormKey, ISkyrimMajorRecordGetter>(kvp.Key, kvp.Value);
+    }
+
+    public ISkyrimMajorRecordGetter? TryGetValue(FormKey key)
+    {
+        return records.TryGetValue(key, out var rec) ? rec : null;
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+
+    class Wrapper<T> : IReadOnlyCache<T, FormKey>
+        where T : class, ISkyrimMajorRecordGetter
+    {
+        public T this[FormKey key] => (T)inner[key];
+        public IEnumerable<FormKey> Keys => inner.Keys;
+        public IEnumerable<T> Items => inner.Items.Cast<T>();
+        public int Count => inner.Count;
+
+        private readonly FakeReadOnlyCache inner;
+
+        public Wrapper(FakeReadOnlyCache inner)
         {
-            return new Wrapper<T>(this);
-        }
-
-        public void Put(ISkyrimMajorRecordGetter record)
-        {
-            records[record.FormKey] = record;
+            this.inner = inner;
         }
 
         public bool ContainsKey(FormKey key)
         {
-            return records.ContainsKey(key);
+            return inner.ContainsKey(key);
         }
 
-        public IEnumerator<IKeyValue<ISkyrimMajorRecordGetter, FormKey>> GetEnumerator()
+        public IEnumerator<IKeyValue<FormKey, T>> GetEnumerator()
         {
-            foreach (var kvp in records)
-                yield return new KeyValue<ISkyrimMajorRecordGetter, FormKey>(kvp.Key, kvp.Value);
+            return inner
+                .Select(x => new KeyValue<FormKey, T>(x.Key, (T)x.Value))
+                .Cast<IKeyValue<FormKey, T>>()
+                .GetEnumerator();
         }
 
-        public ISkyrimMajorRecordGetter TryGetValue(FormKey key)
+        public T? TryGetValue(FormKey key)
         {
-            return records.TryGetValue(key, out var rec) ? rec : null;
+            return inner.TryGetValue(key) as T;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        class Wrapper<T> : IReadOnlyCache<T, FormKey>
-            where T : class, ISkyrimMajorRecordGetter
-        {
-            public T this[FormKey key] => (T)inner[key];
-            public IEnumerable<FormKey> Keys => inner.Keys;
-            public IEnumerable<T> Items => inner.Items.Cast<T>();
-            public int Count => inner.Count;
-
-            private readonly FakeReadOnlyCache inner;
-
-            public Wrapper(FakeReadOnlyCache inner)
-            {
-                this.inner = inner;
-            }
-
-            public bool ContainsKey(FormKey key)
-            {
-                return inner.ContainsKey(key);
-            }
-
-            public IEnumerator<IKeyValue<T, FormKey>> GetEnumerator()
-            {
-                return inner.Select(x => new KeyValue<T, FormKey>(x.Key, (T)x.Value)).GetEnumerator();
-            }
-
-            public T TryGetValue(FormKey key)
-            {
-                return inner.TryGetValue(key) as T;
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
         }
     }
 }

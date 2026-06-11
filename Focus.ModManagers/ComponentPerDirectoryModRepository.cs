@@ -1,128 +1,153 @@
-﻿using Focus.Files;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.IO.Abstractions;
-using System.Threading.Tasks;
+using Focus.Files;
 
-namespace Focus.ModManagers
+namespace Focus.ModManagers;
+
+public record ComponentPerDirectoryConfiguration(string RootPath);
+
+public abstract class ComponentPerDirectoryModRepository<TConfig>
+    : IConfigurableModRepository<TConfig>,
+        IWatchable
+    where TConfig : ComponentPerDirectoryConfiguration
 {
-    public record ComponentPerDirectoryConfiguration(string RootPath);
+    private readonly IFileSystem fs;
+    private readonly IIndexedModRepository inner;
 
-    public abstract class ComponentPerDirectoryModRepository<TConfig> : IConfigurableModRepository<TConfig>, IWatchable
-        where TConfig : ComponentPerDirectoryConfiguration
+    private INotifyingBucketedFileIndex? index;
+
+    public ComponentPerDirectoryModRepository(IFileSystem fs, IIndexedModRepository inner)
     {
-        private readonly IFileSystem fs;
-        private readonly IIndexedModRepository inner;
+        this.fs = fs;
+        this.inner = inner;
+    }
 
-        private INotifyingBucketedFileIndex? index;
+    public async Task Configure(TConfig config)
+    {
+        var resolver = GetComponentResolver(config);
+        index = await BuildIndexAsync(config).ConfigureAwait(false);
+        await inner.ConfigureIndex(index, config.RootPath, resolver).ConfigureAwait(false);
+    }
 
-        public ComponentPerDirectoryModRepository(IFileSystem fs, IIndexedModRepository inner)
-        {
-            this.fs = fs;
-            this.inner = inner;
-        }
+    public bool ContainsFile(
+        string relativePath,
+        bool includeArchives,
+        bool includeDisabled = false
+    )
+    {
+        return inner.ContainsFile(relativePath, includeArchives, includeDisabled);
+    }
 
-        public async Task Configure(TConfig config)
-        {
-            var resolver = GetComponentResolver(config);
-            index = await BuildIndexAsync(config).ConfigureAwait(false);
-            await inner.ConfigureIndex(index, config.RootPath, resolver).ConfigureAwait(false);
-        }
+    public bool ContainsFile(
+        IEnumerable<ModComponentInfo> components,
+        string relativePath,
+        bool includeArchives,
+        bool includeDisabled = false
+    )
+    {
+        return inner.ContainsFile(components, relativePath, includeArchives, includeDisabled);
+    }
 
-        public bool ContainsFile(string relativePath, bool includeArchives, bool includeDisabled = false)
-        {
-            return inner.ContainsFile(relativePath, includeArchives, includeDisabled);
-        }
+    public bool ContainsFile(
+        ModInfo mod,
+        string relativePath,
+        bool includeArchives,
+        bool includeDisabled = false
+    )
+    {
+        return inner.ContainsFile(mod, relativePath, includeArchives, includeDisabled);
+    }
 
-        public bool ContainsFile(
-            IEnumerable<ModComponentInfo> components, string relativePath, bool includeArchives,
-            bool includeDisabled = false)
-        {
-            return inner.ContainsFile(components, relativePath, includeArchives, includeDisabled);
-        }
+    public ModInfo? FindByComponentName(string componentName)
+    {
+        return inner.FindByComponentName(componentName);
+    }
 
-        public bool ContainsFile(ModInfo mod, string relativePath, bool includeArchives, bool includeDisabled = false)
-        {
-            return inner.ContainsFile(mod, relativePath, includeArchives, includeDisabled);
-        }
+    public ModInfo? FindByComponentPath(string componentPath)
+    {
+        return inner.FindByComponentPath(componentPath);
+    }
 
-        public ModInfo? FindByComponentName(string componentName)
-        {
-            return inner.FindByComponentName(componentName);
-        }
+    public ModInfo? FindByKey(IModLocatorKey key)
+    {
+        return inner.FindByKey(key);
+    }
 
-        public ModInfo? FindByComponentPath(string componentPath)
-        {
-            return inner.FindByComponentPath(componentPath);
-        }
+    public ModInfo? GetById(string modId)
+    {
+        return inner.GetById(modId);
+    }
 
-        public ModInfo? FindByKey(IModLocatorKey key)
-        {
-            return inner.FindByKey(key);
-        }
+    public ModInfo? GetByName(string modName)
+    {
+        return inner.GetByName(modName);
+    }
 
-        public ModInfo? GetById(string modId)
-        {
-            return inner.GetById(modId);
-        }
+    public IEnumerator<ModInfo> GetEnumerator()
+    {
+        return inner.GetEnumerator();
+    }
 
-        public ModInfo? GetByName(string modName)
-        {
-            return inner.GetByName(modName);
-        }
+    public void PauseWatching()
+    {
+        if (index is IWatchable watchable)
+            watchable.PauseWatching();
+    }
 
-        public IEnumerator<ModInfo> GetEnumerator()
-        {
-            return inner.GetEnumerator();
-        }
+    public void ResumeWatching()
+    {
+        if (index is IWatchable watchable)
+            watchable.ResumeWatching();
+    }
 
-        public void PauseWatching()
-        {
-            if (index is IWatchable watchable)
-                watchable.PauseWatching();
-        }
+    public IEnumerable<ModSearchResult> SearchForFiles(
+        string relativePath,
+        bool includeArchives,
+        bool includeDisabled = false
+    )
+    {
+        return OrderSearchResults(
+            relativePath,
+            inner.SearchForFiles(relativePath, includeArchives, includeDisabled)
+        );
+    }
 
-        public void ResumeWatching()
-        {
-            if (index is IWatchable watchable)
-                watchable.ResumeWatching();
-        }
+    public IEnumerable<ModSearchResult> SearchForFiles(
+        IEnumerable<ModComponentInfo> components,
+        string relativePath,
+        bool includeArchives,
+        bool includeDisabled = false
+    )
+    {
+        return OrderSearchResults(
+            relativePath,
+            inner.SearchForFiles(components, relativePath, includeArchives, includeDisabled)
+        );
+    }
 
-        public IEnumerable<ModSearchResult> SearchForFiles(
-            string relativePath, bool includeArchives, bool includeDisabled = false)
-        {
-            return OrderSearchResults(
-                relativePath, inner.SearchForFiles(relativePath, includeArchives, includeDisabled));
-        }
-
-        public IEnumerable<ModSearchResult> SearchForFiles(
-            IEnumerable<ModComponentInfo> components, string relativePath, bool includeArchives,
-            bool includeDisabled = false)
-        {
-            return OrderSearchResults(
-                relativePath, inner.SearchForFiles(components, relativePath, includeArchives, includeDisabled));
-        }
-
-        protected virtual Task<INotifyingBucketedFileIndex> BuildIndexAsync(TConfig config)
-        {
-            // Building the index is synchronous because the relevant file system APIs are all synchronous (e.g.
-            // Directory.EnumerateFiles), but we can still run it on a background thread.
-            return Task.Run(() =>
+    protected virtual Task<INotifyingBucketedFileIndex> BuildIndexAsync(TConfig config)
+    {
+        // Building the index is synchronous because the relevant file system APIs are all synchronous (e.g.
+        // Directory.EnumerateFiles), but we can still run it on a background thread.
+        return Task.Run(
+            () =>
                 FileSystemIndex.Build(fs, config.RootPath, Bucketizers.TopLevelDirectory())
-                as INotifyingBucketedFileIndex);
-        }
+                as INotifyingBucketedFileIndex
+        );
+    }
 
-        protected abstract IComponentResolver GetComponentResolver(TConfig config);
+    protected abstract IComponentResolver GetComponentResolver(TConfig config);
 
-        protected virtual IEnumerable<ModSearchResult> OrderSearchResults(
-            string relativePath, IEnumerable<ModSearchResult> results)
-        {
-            return results;
-        }
+    protected virtual IEnumerable<ModSearchResult> OrderSearchResults(
+        string relativePath,
+        IEnumerable<ModSearchResult> results
+    )
+    {
+        return results;
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

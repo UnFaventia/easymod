@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
+﻿namespace Focus.Analysis.Records;
 
-namespace Focus.Analysis.Records
+public interface IRecordScanner
 {
-    public interface IRecordScanner
-    {
-        IEnumerable<IRecordKey> GetKeys(string pluginName, RecordType type);
-    }
+    IEnumerable<IRecordKey> GetKeys(string pluginName, RecordType type);
 }

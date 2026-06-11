@@ -1,26 +1,24 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
-namespace Focus.Apps.EasyNpc.Main
+namespace Focus.Apps.EasyNpc.Main;
+
+/// <summary>
+/// Interaction logic for StartupWarningWindow.xaml
+/// </summary>
+public partial class StartupWarningWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for StartupWarningWindow.xaml
-    /// </summary>
-    public partial class StartupWarningWindow : Window
+    public StartupWarningWindow()
     {
-        public StartupWarningWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void ExitButton_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+    private void ExitButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 
-        private void IgnoreButton_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = true;
-        }
+    private void IgnoreButton_Click(object sender, RoutedEventArgs e)
+    {
+        DialogResult = true;
     }
 }

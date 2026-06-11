@@ -1,13 +1,12 @@
 ﻿using Autofac;
 using Focus.Apps.EasyNpc.Maintenance;
 
-namespace Focus.Apps.EasyNpc.Modules
+namespace Focus.Apps.EasyNpc.Modules;
+
+public class MaintenanceModule : Module
 {
-    public class MaintenanceModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<MaintenanceViewModel>();
-        }
+        builder.RegisterType<MaintenanceViewModel>();
     }
 }

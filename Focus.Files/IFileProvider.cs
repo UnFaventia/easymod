@@ -1,11 +1,8 @@
-﻿using System;
+﻿namespace Focus.Files;
 
-namespace Focus.Files
+public interface IFileProvider
 {
-    public interface IFileProvider
-    {
-        bool Exists(string fileName);
-        ulong GetSize(string fileName);
-        ReadOnlySpan<byte> ReadBytes(string fileName);
-    }
+    bool Exists(string fileName);
+    ulong GetSize(string fileName);
+    ReadOnlySpan<byte> ReadBytes(string fileName);
 }

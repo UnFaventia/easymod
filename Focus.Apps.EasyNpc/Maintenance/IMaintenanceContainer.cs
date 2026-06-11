@@ -1,7 +1,6 @@
-﻿namespace Focus.Apps.EasyNpc.Maintenance
+﻿namespace Focus.Apps.EasyNpc.Maintenance;
+
+public interface IMaintenanceContainer
 {
-    public interface IMaintenanceContainer
-    {
-        MaintenanceViewModel Maintenance { get; }
-    }
+    MaintenanceViewModel Maintenance { get; }
 }

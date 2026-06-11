@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace Focus.Apps.EasyNpc.Reports
+namespace Focus.Apps.EasyNpc.Reports;
+
+/// <summary>
+/// Interaction logic for PluginErrors.xaml
+/// </summary>
+public partial class PluginErrorsView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for PluginErrors.xaml
-    /// </summary>
-    public partial class PluginErrorsView : UserControl
+    public PluginErrorsView()
     {
-        public PluginErrorsView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -1,12 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+  <Import Project="..\EasyMod.props" />
 
   <ItemGroup>
-    <PackageReference Include="SharpDX" Version="4.2.0" />
-    <PackageReference Include="SharpDX.XAudio2" Version="4.2.0" />
+    <PackageReference Include="SharpDX" />
+    <PackageReference Include="SharpDX.XAudio2" />
   </ItemGroup>
 
 </Project>

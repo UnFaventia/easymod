@@ -1,8 +1,7 @@
-﻿namespace Focus.ModManagers
+﻿namespace Focus.ModManagers;
+
+public interface IModManagerConfiguration
 {
-    public interface IModManagerConfiguration
-    {
-        public string GameDataPath { get; }
-        public string ModsDirectory { get; }
-    }
+    public string GameDataPath { get; }
+    public string ModsDirectory { get; }
 }

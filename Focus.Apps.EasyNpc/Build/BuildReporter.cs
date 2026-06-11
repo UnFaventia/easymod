@@ -1,34 +1,33 @@
-﻿using Focus.Apps.EasyNpc.Configuration;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
+using Focus.Apps.EasyNpc.Configuration;
 
-namespace Focus.Apps.EasyNpc.Build
+namespace Focus.Apps.EasyNpc.Build;
+
+public interface IBuildReporter
 {
-    public interface IBuildReporter
+    void Delete();
+    void Save(BuildReport report);
+}
+
+public class BuildReporter : IBuildReporter
+{
+    private readonly IAppSettings appSettings;
+    private readonly IFileSystem fs;
+
+    public BuildReporter(IFileSystem fs, IAppSettings appSettings)
     {
-        void Delete();
-        void Save(BuildReport report);
+        this.appSettings = appSettings;
+        this.fs = fs;
     }
 
-    public class BuildReporter : IBuildReporter
+    public void Delete()
     {
-        private readonly IAppSettings appSettings;
-        private readonly IFileSystem fs;
+        fs.File.Delete(appSettings.BuildReportPath);
+    }
 
-        public BuildReporter(IFileSystem fs, IAppSettings appSettings)
-        {
-            this.appSettings = appSettings;
-            this.fs = fs;
-        }
-
-        public void Delete()
-        {
-            fs.File.Delete(appSettings.BuildReportPath);
-        }
-
-        public void Save(BuildReport report)
-        {
-            using var stream = fs.File.Create(appSettings.BuildReportPath);
-            report.SaveToStream(stream);
-        }
+    public void Save(BuildReport report)
+    {
+        using var stream = fs.File.Create(appSettings.BuildReportPath);
+        report.SaveToStream(stream);
     }
 }

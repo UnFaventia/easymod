@@ -1,26 +1,28 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Focus.Apps.EasyNpc
+namespace Focus.Apps.EasyNpc;
+
+/// <summary>
+/// Interaction logic for MiniSearchBox.xaml
+/// </summary>
+public partial class MiniSearchBox : UserControl
 {
-    /// <summary>
-    /// Interaction logic for MiniSearchBox.xaml
-    /// </summary>
-    public partial class MiniSearchBox : UserControl
+    public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+        "Text",
+        typeof(string),
+        typeof(MiniSearchBox),
+        new PropertyMetadata(string.Empty)
+    );
+
+    public string Text
     {
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text", typeof(string), typeof(MiniSearchBox), new PropertyMetadata(string.Empty));
+        get { return (string)GetValue(TextProperty); }
+        set { SetValue(TextProperty, value); }
+    }
 
-        public string Text
-        {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
-        }
-
-        public MiniSearchBox()
-        {
-            InitializeComponent();
-        }
+    public MiniSearchBox()
+    {
+        InitializeComponent();
     }
 }

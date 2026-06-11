@@ -1,28 +1,31 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
 
-namespace Focus.Apps.EasyNpc.Configuration
+namespace Focus.Apps.EasyNpc.Configuration;
+
+public class SafeStringEnumConverter : StringEnumConverter
 {
-    public class SafeStringEnumConverter : StringEnumConverter
+    public object DefaultValue { get; }
+
+    public SafeStringEnumConverter(object defaultValue)
     {
-        public object DefaultValue { get; }
+        DefaultValue = defaultValue;
+    }
 
-        public SafeStringEnumConverter(object defaultValue)
+    public override object? ReadJson(
+        JsonReader reader,
+        Type objectType,
+        object? existingValue,
+        JsonSerializer serializer
+    )
+    {
+        try
         {
-            DefaultValue = defaultValue;
+            return base.ReadJson(reader, objectType, existingValue, serializer);
         }
-
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        catch (JsonSerializationException)
         {
-            try
-            {
-                return base.ReadJson(reader, objectType, existingValue, serializer);
-            }
-            catch (JsonSerializationException)
-            {
-                return DefaultValue;
-            }
+            return DefaultValue;
         }
     }
 }

@@ -1,17 +1,15 @@
 ﻿using Mutagen.Bethesda.Skyrim;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using RecordType = Focus.Analysis.Records.RecordType;
 
-namespace Focus.Providers.Mutagen.Analysis
-{
-    public static class RecordTypeExtensions
-    {
-        private static readonly Dictionary<Type, RecordType> GettersToRecordTypes =
-            Enum.GetValues<RecordType>().ToDictionary(x => GetGroupType(x));
+namespace Focus.Providers.Mutagen.Analysis;
 
-        public static Type GetGroupType(this RecordType type) => type switch
+public static class RecordTypeExtensions
+{
+    private static readonly Dictionary<Type, RecordType> GettersToRecordTypes =
+        Enum.GetValues<RecordType>().ToDictionary(x => GetGroupType(x));
+
+    public static Type GetGroupType(this RecordType type) =>
+        type switch
         {
             RecordType.AcousticSpace => typeof(IAcousticSpaceGetter),
             RecordType.Action => typeof(IActionRecordGetter),
@@ -124,12 +122,16 @@ namespace Focus.Providers.Mutagen.Analysis
             RecordType.Weather => typeof(IWeatherGetter),
             RecordType.WordOfPower => typeof(IWordOfPowerGetter),
             RecordType.Worldspace => typeof(IWorldspaceGetter),
-            _ => throw new ArgumentException($"Record type {type} is not recognized or not supported.", nameof(type))
+            _ => throw new ArgumentException(
+                $"Record type {type} is not recognized or not supported.",
+                nameof(type)
+            ),
         };
 
-        public static RecordType GetRecordType(this Type recordGetterType)
-        {
-            return GettersToRecordTypes.TryGetValue(recordGetterType, out var recordType) ? recordType : 0;
-        }
+    public static RecordType GetRecordType(this Type recordGetterType)
+    {
+        return GettersToRecordTypes.TryGetValue(recordGetterType, out var recordType)
+            ? recordType
+            : 0;
     }
 }

@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace Focus.Apps.EasyNpc.Profiles
+namespace Focus.Apps.EasyNpc.Profiles;
+
+/// <summary>
+/// Interaction logic for Mugshot.xaml
+/// </summary>
+public partial class MugshotViewer : UserControl
 {
-    /// <summary>
-    /// Interaction logic for Mugshot.xaml
-    /// </summary>
-    public partial class MugshotViewer : UserControl
+    public MugshotViewer()
     {
-        public MugshotViewer()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

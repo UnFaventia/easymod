@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31205.134
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Focus.Apps.EasyNpc", "Focus.Apps.EasyNpc\Focus.Apps.EasyNpc.csproj", "{CCD530CF-0A07-4BBA-B305-F6C7957AB647}"
 EndProject
@@ -51,6 +51,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Focus.ModManagers.Vortex.Te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main", "Main", "{344D7631-38FB-41FB-A279-BE708E94BCBE}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Packages.props = Directory.Packages.props
+		EasyMod.props = EasyMod.props
+		EasyMod.Tests.props = EasyMod.Tests.props
 		README.md = README.md
 		roll-changelog.ps1 = roll-changelog.ps1
 		update-version.ps1 = update-version.ps1
@@ -64,7 +68,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{
 		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Focus.Apps.EasyNpc.Tests", "Focus.Apps.EasyNpc.Tests\Focus.Apps.EasyNpc.Tests.csproj", "{A2964293-EA85-4C5A-B3EB-2E78B8B3B732}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Focus.Apps.EasyNpc.Tests", "Focus.Apps.EasyNpc.Tests\Focus.Apps.EasyNpc.Tests.csproj", "{A2964293-EA85-4C5A-B3EB-2E78B8B3B732}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Focus.Apps.EasyNpc.Framework", "Focus.Apps.EasyNpc.Framework\Focus.Apps.EasyNpc.Framework.csproj", "{A9722D90-37DB-4492-BB19-97C623A969B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Focus.Apps.EasyNpc.Cli", "Focus.Apps.EasyNpc.Cli\Focus.Apps.EasyNpc.Cli.csproj", "{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -352,6 +360,30 @@ Global
 		{A2964293-EA85-4C5A-B3EB-2E78B8B3B732}.Release|x64.Build.0 = Release|Any CPU
 		{A2964293-EA85-4C5A-B3EB-2E78B8B3B732}.Release|x86.ActiveCfg = Release|Any CPU
 		{A2964293-EA85-4C5A-B3EB-2E78B8B3B732}.Release|x86.Build.0 = Release|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Debug|x64.Build.0 = Debug|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Debug|x86.Build.0 = Debug|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Release|x64.ActiveCfg = Release|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Release|x64.Build.0 = Release|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Release|x86.ActiveCfg = Release|Any CPU
+		{A9722D90-37DB-4492-BB19-97C623A969B1}.Release|x86.Build.0 = Release|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Debug|x64.Build.0 = Debug|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Debug|x86.Build.0 = Debug|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Release|x64.ActiveCfg = Release|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Release|x64.Build.0 = Release|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Release|x86.ActiveCfg = Release|Any CPU
+		{EBBFA2C0-F975-410A-8643-A85AA5B48EEF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

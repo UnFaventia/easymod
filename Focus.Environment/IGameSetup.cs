@@ -1,25 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿namespace Focus.Environment;
 
-namespace Focus.Environment
+public interface IGameSetup
 {
-    public interface IGameSetup
-    {
-        IReadOnlyList<PluginInfo> AvailablePlugins { get; }
-        string DataDirectory { get; }
-        bool IsConfirmed { get; }
-        ILoadOrderGraph LoadOrderGraph { get; }
+    IReadOnlyList<PluginInfo> AvailablePlugins { get; }
+    string DataDirectory { get; }
+    bool IsConfirmed { get; }
+    ILoadOrderGraph LoadOrderGraph { get; }
 
-        void Confirm();
-    }
+    void Confirm();
+}
 
-    public static class GameSetupExtensions
+public static class GameSetupExtensions
+{
+    public static IEnumerable<string> GetBaseGamePlugins(this IGameSetup setup)
     {
-        public static IEnumerable<string> GetBaseGamePlugins(this IGameSetup setup)
-        {
-            return setup.AvailablePlugins
-                .Select(p => p.FileName)
-                .Where(f => setup.LoadOrderGraph.IsImplicit(f));
-        }
+        return setup
+            .AvailablePlugins.Select(p => p.FileName)
+            .Where(f => setup.LoadOrderGraph.IsImplicit(f));
     }
 }

@@ -1,13 +1,12 @@
-﻿namespace Focus.Apps.EasyNpc.Build.Preview
+﻿namespace Focus.Apps.EasyNpc.Build.Preview;
+
+/// <summary>
+/// Interaction logic for BuildPreviewPage.xaml
+/// </summary>
+public partial class BuildPreviewPage : ModernWpf.Controls.Page
 {
-    /// <summary>
-    /// Interaction logic for BuildPreviewPage.xaml
-    /// </summary>
-    public partial class BuildPreviewPage : ModernWpf.Controls.Page
+    public BuildPreviewPage()
     {
-        public BuildPreviewPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

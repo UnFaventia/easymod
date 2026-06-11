@@ -1,21 +1,22 @@
 using System.IO.Abstractions.TestingHelpers;
 using Xunit;
 
-namespace Focus.ModManagers.Vortex.Tests
+namespace Focus.ModManagers.Vortex.Tests;
+
+public class ModManifestTests
 {
-    public class ModManifestTests
+    private readonly MockFileSystem fs;
+
+    public ModManifestTests()
     {
-        private readonly MockFileSystem fs;
+        fs = new MockFileSystem();
+    }
 
-        public ModManifestTests()
-        {
-            fs = new MockFileSystem();
-        }
-
-        [Fact]
-        public void ParsesValidManifest()
-        {
-            const string json = @"
+    [Fact]
+    public void ParsesValidManifest()
+    {
+        const string json =
+            @"
             {
                 ""files"": {
                     ""first folder"": {
@@ -44,47 +45,51 @@ namespace Focus.ModManagers.Vortex.Tests
                 ""reportPath"": ""C:\\temp\\vortexreport.json"",
                 ""stagingDir"": ""C:\\vortex\\staging""
             }";
-            fs.AddFile(@"C:\temp\vortex-bootstrap.json", new MockFileData(json));
-            var manifest = ModManifest.LoadFromFile(fs, @"C:\temp\vortex-bootstrap.json");
+        fs.AddFile(@"C:\temp\vortex-bootstrap.json", new MockFileData(json));
+        var manifest = ModManifest.LoadFromFile(fs, @"C:\temp\vortex-bootstrap.json");
 
-            Assert.Equal(@"C:\games\steam\steamapps\common\Skyrim Special Edition\data", manifest.GameDataPath);
-            Assert.Equal(@"C:\vortex\staging", manifest.StagingDir);
-            Assert.Equal(@"C:\vortex\staging", manifest.ModsDirectory);
-            Assert.Collection(
-                manifest.Files,
-                x =>
-                {
-                    Assert.Equal("first folder", x.Key);
-                    Assert.Null(x.Value.Id);
-                    Assert.Equal("123", x.Value.ModId);
-                    Assert.True(x.Value.IsEnabled);
-                },
-                x =>
-                {
-                    Assert.Equal("second folder", x.Key);
-                    Assert.Equal("777", x.Value.Id);
-                    Assert.Equal("456", x.Value.ModId);
-                    Assert.Null(x.Value.IsEnabled);
-                },
-                x =>
-                {
-                    Assert.Equal("third folder", x.Key);
-                    Assert.Equal("888", x.Value.Id);
-                    Assert.Equal("123", x.Value.ModId);
-                    Assert.False(x.Value.IsEnabled);
-                });
-            Assert.Collection(
-                manifest.Mods,
-                x =>
-                {
-                    Assert.Equal("123", x.Key);
-                    Assert.Equal("Mod 1", x.Value.Name);
-                },
-                x =>
-                {
-                    Assert.Equal("456", x.Key);
-                    Assert.Equal("Mod 2", x.Value.Name);
-                });
-        }
+        Assert.Equal(
+            @"C:\games\steam\steamapps\common\Skyrim Special Edition\data",
+            manifest.GameDataPath
+        );
+        Assert.Equal(@"C:\vortex\staging", manifest.StagingDir);
+        Assert.Equal(@"C:\vortex\staging", manifest.ModsDirectory);
+        Assert.Collection(
+            manifest.Files,
+            x =>
+            {
+                Assert.Equal("first folder", x.Key);
+                Assert.Null(x.Value.Id);
+                Assert.Equal("123", x.Value.ModId);
+                Assert.True(x.Value.IsEnabled);
+            },
+            x =>
+            {
+                Assert.Equal("second folder", x.Key);
+                Assert.Equal("777", x.Value.Id);
+                Assert.Equal("456", x.Value.ModId);
+                Assert.Null(x.Value.IsEnabled);
+            },
+            x =>
+            {
+                Assert.Equal("third folder", x.Key);
+                Assert.Equal("888", x.Value.Id);
+                Assert.Equal("123", x.Value.ModId);
+                Assert.False(x.Value.IsEnabled);
+            }
+        );
+        Assert.Collection(
+            manifest.Mods,
+            x =>
+            {
+                Assert.Equal("123", x.Key);
+                Assert.Equal("Mod 1", x.Value.Name);
+            },
+            x =>
+            {
+                Assert.Equal("456", x.Key);
+                Assert.Equal("Mod 2", x.Value.Name);
+            }
+        );
     }
 }

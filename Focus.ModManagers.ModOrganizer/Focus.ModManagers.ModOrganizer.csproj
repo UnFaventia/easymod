@@ -1,20 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\EasyMod.props" />
+
   <PropertyGroup>
-    <TargetFramework>net5.0-windows10.0.19041</TargetFramework>
-    <Nullable>enable</Nullable>
-    <WarningsAsErrors>nullable</WarningsAsErrors>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <AssemblyTitle>Integration library for Mod Organizer</AssemblyTitle>
-    <Product>EasyMod</Product>
-    <Version>0.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ini-parser" Version="2.5.2">
+    <PackageReference Include="ini-parser">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-    <PackageReference Include="System.IO.Abstractions" Version="13.2.43" />
+    <PackageReference Include="Microsoft.Win32.Registry" />
+    <PackageReference Include="System.IO.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>

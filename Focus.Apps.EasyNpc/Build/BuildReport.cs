@@ -1,12 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using System.IO;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.IO;
 
-namespace Focus.Apps.EasyNpc.Build
+namespace Focus.Apps.EasyNpc.Build;
+
+public class BuildReport
 {
-    public class BuildReport
-    {
-        private static readonly JsonSerializer Serializer = new()
+    private static readonly JsonSerializer Serializer =
+        new()
         {
             ContractResolver = new DefaultContractResolver
             {
@@ -15,18 +16,17 @@ namespace Focus.Apps.EasyNpc.Build
             Formatting = Formatting.Indented,
         };
 
-        public string ModName { get; init; } = string.Empty;
+    public string ModName { get; init; } = string.Empty;
 
-        public void SaveToFile(string fileName)
-        {
-            using var fs = File.Create(fileName);
-            SaveToStream(fs);
-        }
+    public void SaveToFile(string fileName)
+    {
+        using var fs = File.Create(fileName);
+        SaveToStream(fs);
+    }
 
-        public void SaveToStream(Stream stream)
-        {
-            using var streamWriter = new StreamWriter(stream);
-            Serializer.Serialize(streamWriter, this);
-        }
+    public void SaveToStream(Stream stream)
+    {
+        using var streamWriter = new StreamWriter(stream);
+        Serializer.Serialize(streamWriter, this);
     }
 }

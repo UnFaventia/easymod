@@ -1,16 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <Import Project="..\EasyMod.props" />
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows10.0.19041</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <RootNamespace>Focus.Apps.EasyNpc</RootNamespace>
     <UseWPF>true</UseWPF>
-    <Nullable>enable</Nullable>
     <AssemblyName>EasyNPC</AssemblyName>
     <AssemblyTitle>Easy NPC</AssemblyTitle>
-    <Product>EasyMod</Product>
-    <Version>0.9.6</Version>
     <ApplicationIcon>EasyNPC.ico</ApplicationIcon>
     <NoWarn>MSB3246</NoWarn>
   </PropertyGroup>
@@ -36,33 +35,36 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.2.0" />
-    <PackageReference Include="AutofacSerilogIntegration" Version="5.0.0" />
-    <PackageReference Include="CommandLineParser" Version="2.8.0" />
-    <PackageReference Include="Fody" Version="6.5.1">
+    <PackageReference Include="Autofac" />
+    <PackageReference Include="AutofacSerilogIntegration" />
+    <PackageReference Include="CommandLineParser" />
+    <PackageReference Include="FastEnum" />
+    <PackageReference Include="Fody">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FontAwesome5" Version="2.1.1" />
-    <PackageReference Include="MathConverter" Version="1.2.1.6">
+    <PackageReference Include="FontAwesome5" />
+    <PackageReference Include="MathConverter">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
-    <PackageReference Include="ModernWpfUI" Version="0.9.4" />
-    <PackageReference Include="Mutagen.Bethesda.Core.Windows" Version="0.31.0" />
-    <PackageReference Include="Mutagen.Bethesda.Skyrim" Version="0.31.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="niflysharp" Version="1.2.8" />
-    <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
-    <PackageReference Include="PropertyChanged.Fody" Version="3.3.3">
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" />
+    <PackageReference Include="ModernWpfUI" />
+    <PackageReference Include="Mutagen.Bethesda.Core.Windows" />
+    <PackageReference Include="Mutagen.Bethesda.Skyrim" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="niflysharp" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" />
+    <PackageReference Include="PropertyChanged.Fody">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
-    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
-    <PackageReference Include="System.IO.Abstractions" Version="13.2.43" />
-    <PackageReference Include="System.Linq.Async" Version="5.0.0" />
+    <PackageReference Include="Serilog" />
+    <PackageReference Include="Serilog.Enrichers.Thread" />
+    <PackageReference Include="Serilog.Sinks.Debug" />
+    <PackageReference Include="Serilog.Sinks.File" />
+    <PackageReference Include="System.IO.Abstractions" />
+    <PackageReference Include="System.Linq.Async" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" />
+    <PackageReference Include="System.Security.Permissions" />
   </ItemGroup>
 
   <ItemGroup>
@@ -127,6 +129,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>EnumResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Repo\easymod\Focus.Apps.EasyNpc\.editorconfig" />
   </ItemGroup>
 
 </Project>

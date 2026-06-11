@@ -1,22 +1,21 @@
-﻿namespace Focus.Apps.EasyNpc.Messages
+﻿namespace Focus.Apps.EasyNpc.Messages;
+
+public enum MainPage
 {
-    public enum MainPage
-    {
-        Profile,
-        Build,
-        BuildPreview,
-        Maintenance,
-        Log,
-        Settings
-    }
+    Profile,
+    Build,
+    BuildPreview,
+    Maintenance,
+    Log,
+    Settings,
+}
 
-    public class NavigateToPage
-    {
-        public MainPage Page { get; private init; }
+public class NavigateToPage
+{
+    public MainPage Page { get; private init; }
 
-        public NavigateToPage(MainPage page)
-        {
-            Page = page;
-        }
+    public NavigateToPage(MainPage page)
+    {
+        Page = page;
     }
 }

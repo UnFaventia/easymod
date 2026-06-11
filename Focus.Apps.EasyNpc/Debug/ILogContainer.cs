@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace Focus.Apps.EasyNpc.Debug;
 
-namespace Focus.Apps.EasyNpc.Debug
+public interface ILogContainer
 {
-    public interface ILogContainer
-    {
-        LogViewModel Log { get; }
-    }
+    LogViewModel Log { get; }
 }

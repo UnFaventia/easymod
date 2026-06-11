@@ -1,46 +1,44 @@
-﻿using Focus.ModManagers;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
+using Focus.ModManagers;
 
-namespace Focus.Apps.EasyNpc.Profiles
+namespace Focus.Apps.EasyNpc.Profiles;
+
+public class ProfileSection
 {
-    public class ProfileSection
+    public int Count => npcs.Count;
+    public IEnumerable<INpc> Npcs => npcs.Values;
+
+    private readonly Dictionary<IRecordKey, INpc> npcs = new();
+
+    public ProfileSection(IEnumerable<INpc> npcs)
     {
-        public int Count => npcs.Count;
-        public IEnumerable<INpc> Npcs => npcs.Values;
-
-        private readonly Dictionary<IRecordKey, INpc> npcs = new();
-
-        public ProfileSection(IEnumerable<INpc> npcs)
-        {
-            this.npcs = npcs.ToDictionary(x => new RecordKey(x), RecordKeyComparer.Default);
-        }
-
-        public bool TryGetNpc(IRecordKey key, [MaybeNullWhen(false)] out INpc npc)
-        {
-            return npcs.TryGetValue(key, out npc);
-        }
+        this.npcs = npcs.ToDictionary(x => new RecordKey(x), RecordKeyComparer.Default);
     }
 
-    public class Profile : ProfileSection
+    public bool TryGetNpc(IRecordKey key, [MaybeNullWhen(false)] out INpc npc)
     {
-        public ProfileSection Hidden { get; private init; }
+        return npcs.TryGetValue(key, out npc);
+    }
+}
 
-        public Profile(IEnumerable<INpc> npcs)
-            : base(npcs.Where(x => x.HasAvailableFaceCustomizations))
-        {
-            Hidden = new ProfileSection(npcs.Where(x => !x.HasAvailableFaceCustomizations));
-        }
+public class Profile : ProfileSection
+{
+    public ProfileSection Hidden { get; private init; }
 
-        public void Load(Stream stream)
-        {
-            var savedProfile = SavedProfile.LoadFromStream(stream);
-            Parallel.ForEach(savedProfile.Npcs, x =>
+    public Profile(IEnumerable<INpc> npcs)
+        : base(npcs.Where(x => x.HasAvailableFaceCustomizations))
+    {
+        Hidden = new ProfileSection(npcs.Where(x => !x.HasAvailableFaceCustomizations));
+    }
+
+    public void Load(Stream stream)
+    {
+        var savedProfile = SavedProfile.LoadFromStream(stream);
+        Parallel.ForEach(
+            savedProfile.Npcs,
+            x =>
             {
                 var key = new RecordKey(x);
                 if (!TryGetNpc(key, out var npc))
@@ -49,55 +47,60 @@ namespace Focus.Apps.EasyNpc.Profiles
                 npc.SetFaceOption(x.FacePluginName);
                 if (!string.IsNullOrEmpty(x.FaceModName))
                     npc.SetFaceMod(x.FaceModName);
-            });
-        }
-
-        public void Load(string path)
-        {
-            using var fs = File.OpenRead(path);
-            Load(fs);
-        }
-
-        public bool TryResolveTemplate(INpc npc, [MaybeNullWhen(false)] out INpc targetNpc)
-        {
-            var visitedKeys = new HashSet<IRecordKey>(RecordKeyComparer.Default);
-            return TryResolveTemplate(npc, out targetNpc, visitedKeys);
-        }
-
-        public void Save(Stream stream)
-        {
-            var savedNpcs = Npcs.Select(x => new SavedNpcConfiguration
-            {
-                BasePluginName = x.BasePluginName,
-                LocalFormIdHex = x.LocalFormIdHex,
-                DefaultPluginName = x.DefaultOption.PluginName,
-                FacePluginName = x.FaceOption.PluginName,
-                FaceModName = x.FaceGenOverride is not null ? new ModLocatorKey(x.FaceGenOverride).ToString() : null,
-            });
-            new SavedProfile(savedNpcs).SaveToStream(stream);
-        }
-
-        public void Save(string path)
-        {
-            using var fs = File.Create(path);
-            Save(fs);
-        }
-
-        private bool TryResolveTemplate(
-            INpc npc, [MaybeNullWhen(false)] out INpc recursiveTargetNpc, HashSet<IRecordKey> visitedKeys)
-        {
-            recursiveTargetNpc = null;
-            if (npc.DefaultOption.Analysis.TemplateInfo?.InheritsTraits != true)
-            {
-                recursiveTargetNpc = npc;
-                return true;
             }
-            if (visitedKeys.Contains(npc))
-                return false;
-            visitedKeys.Add(npc);
-            if (TryGetNpc(npc.DefaultOption.Analysis.TemplateInfo.Key, out var targetNpc))
-                return TryResolveTemplate(targetNpc, out recursiveTargetNpc);
-            return false;
+        );
+    }
+
+    public void Load(string path)
+    {
+        using var fs = File.OpenRead(path);
+        Load(fs);
+    }
+
+    public bool TryResolveTemplate(INpc npc, [MaybeNullWhen(false)] out INpc targetNpc)
+    {
+        var visitedKeys = new HashSet<IRecordKey>(RecordKeyComparer.Default);
+        return TryResolveTemplate(npc, out targetNpc, visitedKeys);
+    }
+
+    public void Save(Stream stream)
+    {
+        var savedNpcs = Npcs.Select(x => new SavedNpcConfiguration
+        {
+            BasePluginName = x.BasePluginName,
+            LocalFormIdHex = x.LocalFormIdHex,
+            DefaultPluginName = x.DefaultOption.PluginName,
+            FacePluginName = x.FaceOption.PluginName,
+            FaceModName = x.FaceGenOverride is not null
+                ? new ModLocatorKey(x.FaceGenOverride).ToString()
+                : null,
+        });
+        new SavedProfile(savedNpcs).SaveToStream(stream);
+    }
+
+    public void Save(string path)
+    {
+        using var fs = File.Create(path);
+        Save(fs);
+    }
+
+    private bool TryResolveTemplate(
+        INpc npc,
+        [MaybeNullWhen(false)] out INpc recursiveTargetNpc,
+        HashSet<IRecordKey> visitedKeys
+    )
+    {
+        recursiveTargetNpc = null;
+        if (npc.DefaultOption.Analysis.TemplateInfo?.InheritsTraits != true)
+        {
+            recursiveTargetNpc = npc;
+            return true;
         }
+        if (visitedKeys.Contains(npc))
+            return false;
+        visitedKeys.Add(npc);
+        if (TryGetNpc(npc.DefaultOption.Analysis.TemplateInfo.Key, out var targetNpc))
+            return TryResolveTemplate(targetNpc, out recursiveTargetNpc);
+        return false;
     }
 }

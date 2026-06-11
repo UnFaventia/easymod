@@ -1,45 +1,42 @@
 ﻿using Focus.Analysis.Records;
 using Focus.Providers.Mutagen.Analysis;
 using Mutagen.Bethesda.Skyrim;
-using System;
-using System.Collections.Generic;
 
-namespace Focus.Providers.Mutagen.Tests.Analysis
+namespace Focus.Providers.Mutagen.Tests.Analysis;
+
+class FakeReferenceChecker : IReferenceChecker
 {
-    class FakeReferenceChecker : IReferenceChecker
+    public IEnumerable<ReferencePath> InvalidPaths { get; set; } = [];
+
+    public IReferenceChecker<T> Of<T>()
+        where T : class, ISkyrimMajorRecordGetter
     {
-        public IEnumerable<ReferencePath> InvalidPaths { get; set; }
+        return new CheckerOf<T>(this);
+    }
 
-        public IReferenceChecker<T> Of<T>()
-            where T : class, ISkyrimMajorRecordGetter
+    public IEnumerable<ReferencePath> GetInvalidPaths(ISkyrimMajorRecordGetter record)
+    {
+        return InvalidPaths;
+    }
+
+    class CheckerOf<T> : IReferenceChecker<T>
+        where T : class, ISkyrimMajorRecordGetter
+    {
+        private readonly FakeReferenceChecker parentChecker;
+
+        public CheckerOf(FakeReferenceChecker parentChecker)
         {
-            return new CheckerOf<T>(this);
+            this.parentChecker = parentChecker;
         }
 
-        public IEnumerable<ReferencePath> GetInvalidPaths(ISkyrimMajorRecordGetter record)
+        public IReferenceChecker<T> Configure(Action<IReferenceFollower<T>> config)
         {
-            return InvalidPaths;
+            return this;
         }
 
-        class CheckerOf<T> : IReferenceChecker<T>
-            where T : class, ISkyrimMajorRecordGetter
+        public IEnumerable<ReferencePath> GetInvalidPaths(T record)
         {
-            private readonly FakeReferenceChecker parentChecker;
-
-            public CheckerOf(FakeReferenceChecker parentChecker)
-            {
-                this.parentChecker = parentChecker;
-            }
-
-            public IReferenceChecker<T> Configure(Action<IReferenceFollower<T>> config)
-            {
-                return this;
-            }
-
-            public IEnumerable<ReferencePath> GetInvalidPaths(T record)
-            {
-                return parentChecker.InvalidPaths;
-            }
+            return parentChecker.InvalidPaths;
         }
     }
 }

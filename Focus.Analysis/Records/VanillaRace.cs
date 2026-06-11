@@ -1,15 +1,14 @@
-﻿namespace Focus.Analysis.Records
+﻿namespace Focus.Analysis.Records;
+
+public enum VanillaRace
 {
-    public enum VanillaRace
-    {
-        Nord = 1,
-        Imperial,
-        Redguard,
-        Breton,
-        HighElf,
-        DarkElf,
-        WoodElf,
-        Orc,
-        Elder,
-    }
+    Nord = 1,
+    Imperial,
+    Redguard,
+    Breton,
+    HighElf,
+    DarkElf,
+    WoodElf,
+    Orc,
+    Elder,
 }

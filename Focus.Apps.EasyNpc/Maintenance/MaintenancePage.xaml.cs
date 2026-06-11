@@ -1,50 +1,45 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
-using TKey = Mutagen.Bethesda.Plugins.FormKey;
+namespace Focus.Apps.EasyNpc.Maintenance;
 
-namespace Focus.Apps.EasyNpc.Maintenance
+/// <summary>
+/// Interaction logic for MaintenancePage.xaml
+/// </summary>
+public partial class MaintenancePage : ModernWpf.Controls.Page
 {
-    /// <summary>
-    /// Interaction logic for MaintenancePage.xaml
-    /// </summary>
-    public partial class MaintenancePage : ModernWpf.Controls.Page
+    protected MaintenanceViewModel Model => ((IMaintenanceContainer)DataContext)!.Maintenance;
+
+    public MaintenancePage()
     {
-        protected MaintenanceViewModel Model => ((IMaintenanceContainer)DataContext)!.Maintenance;
+        InitializeComponent();
+    }
 
-        public MaintenancePage()
-        {
-            InitializeComponent();
-        }
+    private void Page_Loaded(object sender, RoutedEventArgs e)
+    {
+        Model?.Refresh();
+    }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            Model?.Refresh();
-        }
+    private void DeleteLogsButton_Click(object sender, RoutedEventArgs e)
+    {
+        var model = Model;
+        Task.Run(() => model?.DeleteOldLogFiles());
+    }
 
-        private void DeleteLogsButton_Click(object sender, RoutedEventArgs e)
-        {
-            var model = Model;
-            Task.Run(() => model?.DeleteOldLogFiles());
-        }
+    private void EvolveToLoadOrderButton_Click(object sender, RoutedEventArgs e)
+    {
+        var model = Model;
+        Task.Run(() => model?.ResetNpcDefaults());
+    }
 
-        private void EvolveToLoadOrderButton_Click(object sender, RoutedEventArgs e)
-        {
-            var model = Model;
-            Task.Run(() => model?.ResetNpcDefaults());
-        }
+    private void ResetFacesButton_Click(object sender, RoutedEventArgs e)
+    {
+        var model = Model;
+        Task.Run(() => model?.ResetNpcFaces());
+    }
 
-        private void ResetFacesButton_Click(object sender, RoutedEventArgs e)
-        {
-            var model = Model;
-            Task.Run(() => model?.ResetNpcFaces());
-        }
-
-        private void TrimAutosaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            var model = Model;
-            Task.Run(() => model?.TrimAutoSave());
-        }
+    private void TrimAutosaveButton_Click(object sender, RoutedEventArgs e)
+    {
+        var model = Model;
+        Task.Run(() => model?.TrimAutoSave());
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace Focus.Apps.EasyNpc.Profiles
+﻿namespace Focus.Apps.EasyNpc.Profiles;
+
+public interface IProfileContainer
 {
-    public interface IProfileContainer
-    {
-        ProfileViewModel Profile { get; }
-    }
+    ProfileViewModel Profile { get; }
 }

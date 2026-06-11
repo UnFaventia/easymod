@@ -1,8 +1,7 @@
-﻿namespace Focus.Files
+﻿namespace Focus.Files;
+
+public interface IWatchable
 {
-    public interface IWatchable
-    {
-        void PauseWatching();
-        void ResumeWatching();
-    }
+    void PauseWatching();
+    void ResumeWatching();
 }

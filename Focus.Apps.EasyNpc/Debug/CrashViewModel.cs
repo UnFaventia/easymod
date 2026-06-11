@@ -1,26 +1,24 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 
-namespace Focus.Apps.EasyNpc.Debug
+namespace Focus.Apps.EasyNpc.Debug;
+
+public class CrashViewModel
 {
-    public class CrashViewModel
+    public string LogDirectory { get; private init; }
+    public string LogFileName { get; private init; }
+
+    public CrashViewModel(string logDirectory, string logFileName)
     {
-        public string LogDirectory { get; private init; }
-        public string LogFileName { get; private init; }
+        LogDirectory = logDirectory;
+        LogFileName = logFileName;
+    }
 
-        public CrashViewModel(string logDirectory, string logFileName)
-        {
-            LogDirectory = logDirectory;
-            LogFileName = logFileName;
-        }
-
-        public void OpenLogDirectory()
-        {
-            if (!Directory.Exists(LogDirectory)) // In case user moved/deleted after the build
-                return;
-            var psi = new ProcessStartInfo() { FileName = LogDirectory, UseShellExecute = true };
-            Process.Start(psi);
-        }
+    public void OpenLogDirectory()
+    {
+        if (!Directory.Exists(LogDirectory)) // In case user moved/deleted after the build
+            return;
+        var psi = new ProcessStartInfo() { FileName = LogDirectory, UseShellExecute = true };
+        Process.Start(psi);
     }
 }

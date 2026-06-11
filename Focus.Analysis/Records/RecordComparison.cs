@@ -1,7 +1,6 @@
-﻿namespace Focus.Analysis.Records
+﻿namespace Focus.Analysis.Records;
+
+public class RecordComparison
 {
-    public class RecordComparison
-    {
-        public bool IsIdentical { get; init; }
-    }
+    public bool IsIdentical { get; init; }
 }
